@@ -1,0 +1,30 @@
+pipeline {
+ agent any
+
+ stages {
+
+  stage('Build') {
+   steps {
+    sh 'docker build -t devopsacr123.azurecr.io/app:v1 -f docker/Dockerfile .'
+   }
+  }
+
+  stage('Test') {
+   steps {
+    sh 'pytest'
+   }
+  }
+
+  stage('Push') {
+   steps {
+    sh 'docker push devopsacr123.azurecr.io/app:v1'
+   }
+  }
+
+  stage('Deploy') {
+   steps {
+    sh 'kubectl apply -f k8s/'
+   }
+  }
+ }
+}

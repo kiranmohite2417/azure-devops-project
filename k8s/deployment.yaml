@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-app
+  namespace: default
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: devops
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+
+  template:
+    metadata:
+      labels:
+        app: devops
+
+    spec:
+      containers:
+      - name: app
+        image: devopsacr123.azurecr.io/app:v3   # ✅ UPDATED IMAGE
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 80
+
+        env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_HOST
+
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_USER
+
+        - name: DB_PASSWORD   # ✅ FIXED (was DB_PASS)
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_PASSWORD
+
+        - name: DB_NAME       # ✅ ADDED
+          value: "devops_app"
+
+      restartPolicy: Always

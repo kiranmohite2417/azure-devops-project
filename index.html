@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DevOps App</title>
+<style>
+body { background:#0f172a; color:white; text-align:center;}
+button { padding:10px; background:#22c55e; border:none;}
+</style>
+</head>
+<body>
+
+<h1>🚀 DevOps Dashboard</h1>
+<button onclick="load()">Load Users</button>
+<pre id="data"></pre>
+
+<script>
+function load(){
+ fetch('/users')
+ .then(r=>r.json())
+ .then(d=>data.innerHTML=JSON.stringify(d,null,2))
+}
+</script>
+
+</body>
+</html>
